@@ -1,0 +1,468 @@
+Home work-4
+
+1)Implement a Stack using Queue  data structure.
+
+#include <stdio.h>
+
+#define MAX 100
+
+int q[MAX], front = 0, rear = 0;
+
+void push(int x)
+{
+    int i, temp;
+    q[rear++] = x;
+
+    for (i = front; i < rear – 1; i++) {
+        Temp = q[i];
+        q[i] = q[rear – 1];
+        q[rear – 1] = temp;
+    }
+}
+
+void pop()
+{
+    if (front == rear)
+        printf(“Stack is empty\n”);
+    else
+        printf(“Popped: %d\n”, q[front++]);
+}
+
+void display()
+{
+    int i;
+    for (i = front; i < rear; i++)
+        printf(“%d “, q[i]);
+    printf(“\n”);
+}
+
+int main()
+{
+    push(10);
+    push(20);
+    push(30);
+
+    printf(“Stack: “);
+    display();
+
+    Pop();
+
+    printf(“After pop: “);
+    display();
+
+    return 0;
+}
+ Output:
+Stack: 30 20 10
+Popped: 30
+After pop: 20 10
+
+2)Implement a Queue using Stack data structure.
+
+#include <stdio.h>
+
+#define MAX 100
+
+int s1[MAX], s2[MAX];
+int top1 = -1, top2 = -1;
+
+void enqueue(int x)
+{
+    s1[++top1] = x;
+}
+
+void dequeue()
+{
+    int x;
+
+    if (top1 == -1 && top2 == -1) {
+        printf("Queue is empty\n");
+        return;
+    }
+
+    if (top2 == -1) {
+        while (top1 != -1)
+            s2[++top2] = s1[top1--];
+    }
+
+    x = s2[top2--];
+    printf("Deleted: %d\n", x);
+}
+
+void display()
+{
+    int i;
+
+    printf("Queue: ");
+
+    for (i = top2; i >= 0; i--)
+        printf("%d ", s2[i]);
+
+    for (i = 0; i <= top1; i++)
+        printf("%d ", s1[i]);
+
+    printf("\n");
+}
+
+int main()
+{
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+
+    display();
+
+    dequeue();
+    display();
+
+    return 0;
+}
+Output:
+Queue: 10 20 30
+Deleted: 10
+Queue: 20 30
+
+3)Write a C program using Stack data structure to implement browser history management of the visited web pages.
+
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+char history[MAX][100];
+int top = -1;
+
+void visit(char page[])
+{
+    strcpy(history[++top], page);
+}
+
+void back()
+{
+    if (top > 0)
+        top--;
+    else
+        printf("No previous page\n");
+}
+
+void current()
+{
+    printf("Current Page: %s\n", history[top]);
+}
+
+int main()
+{
+    visit("Google");
+    visit("YouTube");
+    visit("Facebook");
+
+    current();
+
+    back();
+    current();
+
+    back();
+    current();
+
+    return 0;
+}
+Output:
+Current Page: Facebook
+Current Page: YouTube
+Current Page: Google
+
+4)Write a C program to sort a stack using a temporary stack.
+
+#include <stdio.h>
+
+#define MAX 100
+
+int stack[MAX], temp[MAX];
+int top = -1, ttop = -1;
+
+void push(int x)
+{
+    stack[++top] = x;
+}
+
+void sortStack()
+{
+    int x;
+
+    while (top != -1) {
+        x = stack[top--];
+
+        while (ttop != -1 && temp[ttop] > x)
+            stack[++top] = temp[ttop--];
+
+        temp[++ttop] = x;
+    }
+}
+
+int main()
+{
+    push(30);
+    push(10);
+    push(40);
+    push(20);
+
+    sortStack();
+
+    printf("Sorted Stack: ");
+
+    while (ttop != -1)
+        printf("%d ", temp[ttop--]);
+
+    return 0;
+}
+Output:
+Sorted Stack: 10 20 30 40
+
+5) The stock span problem is a financial problem where we have a series of daily prices for a stock. The task is to calculate the span of the stock's price for all days. The span of a stock's price for a given day gives the maximum number of consecutive days leading up to that day (including the current day) where the stock price is less than or equal to its price on that day.
+
+#include <stdio.h>
+
+int main()
+{
+    int price[] = {100, 80, 60, 70, 60, 75, 85};
+    int n = 7;
+    int stack[100], top = -1;
+    int span[100];
+    int i;
+
+    for (i = 0; i < n; i++) {
+        while (top != -1 && price[stack[top]] <= price[i])
+            top--;
+
+        if (top == -1)
+            span[i] = i + 1;
+        else
+            span[i] = i - stack[top];
+
+        stack[++top] = i;
+    }
+
+    printf("Stock Span: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", span[i]);
+
+    return 0;
+}
+Output:
+Stock Span: 1 1 1 2 1 4 6
+
+6)Given an array, for each element find the nearest element to its right that has a higher frequency than the current element. If no such element exists, return -1. Implement using Stack.
+#include <stdio.h>
+
+int main()
+{
+    int a[] = {2, 1, 1, 3, 2, 1};
+    int n = 6;
+    int stack[100], top = -1;
+    int result[100];
+    int i;
+
+    for (i = n - 1; i >= 0; i--) {
+
+        while (top != -1 && stack[top] <= a[i])
+            top--;
+
+        if (top == -1)
+            result[i] = -1;
+        else
+            result[i] = stack[top];
+
+        stack[++top] = a[i];
+    }
+
+    printf("Next Greater Elements: ");
+
+    for (i = 0; i < n; i++)
+        printf("%d ", result[i]);
+
+    return 0;
+}
+ Output:
+Next Greater Elements: 3 3 3 -1 -1 -1
+
+7)Given a pattern containing only I’s and D’s:
+I → Increasing
+D → Decreasing
+Write an algorithm using Stack to print the minimum number sequence that follows the given pattern. Digits from 1–9 should be used and digits cannot be repeated.
+
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char pattern[100];
+    int stack[100], top = -1;
+    int num = 1, i;
+
+    printf("Enter pattern: ");
+    scanf("%s", pattern);
+
+    for (i = 0; i <= strlen(pattern); i++) {
+        stack[++top] = num++;
+
+        if (pattern[i] == 'I' || pattern[i] == '\0') {
+            while (top != -1)
+                printf("%d ", stack[top--]);
+        }
+    }
+
+    return 0;
+}
+Output:
+1 3 2 5 4
+
+8) Given an array of digits where values are from 0 to 9, find the minimum possible sum of two numbers formed from the digits of the array. All digits must be used to form the two numbers.
+
+#include <stdio.h>
+
+int main()
+{
+    int a[] = {6, 8, 4, 5, 2, 3};
+    int n = 6;
+    int i, j, temp;
+    int num1 = 0, num2 = 0;
+
+    for (i = 0; i < n - 1; i++)
+        for (j = i + 1; j < n; j++)
+            if (a[i] > a[j]) {
+                temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+            }
+
+    for (i = 0; i < n; i++) {
+        if (i % 2 == 0)
+            num1 = num1 * 10 + a[i];
+        else
+            num2 = num2 * 10 + a[i];
+    }
+
+    printf("Minimum Sum = %d", num1 + num2);
+
+    return 0;
+}
+Output:
+Minimum Sum = 604
+
+9) Given an array and a positive integer K, find the first negative integer for each consecutive subarray/window of size K. If a window does not contain a negative integer, print 0. Implement using Queue.
+
+#include <stdio.h>
+
+int main()
+{
+    int a[] = {-8, 2, 3, -6, 10};
+    int n = 5, k = 2;
+    int queue[100], front = 0, rear = 0;
+    int i;
+
+    for (i = 0; i < k; i++) {
+        if (a[i] < 0)
+            queue[rear++] = i;
+    }
+
+    for (i = k; i <= n; i++) {
+
+        if (front < rear)
+            printf("%d ", a[queue[front]]);
+        else
+            printf("0 ");
+
+        if (i == n)
+            break;
+
+        while (front < rear && queue[front] <= i - k)
+            front++;
+
+        if (a[i] < 0)
+            queue[rear++] = i;
+    }
+
+    return 0;
+}
+Output:
+-8 0 -6 -6
+
+10) Given a matrix of dimensions n × n where each cell can have values:
+0 → Empty cell
+1 → Cell having fresh orange
+2 → Cell having rotten orange
+Find the minimum time required so that all oranges become rotten. A rotten orange at (i,j) can rot its neighboring oranges up, down, left and right. Implement the solution using a Queue.
+
+
+#include <stdio.h>
+
+#define MAX 100
+
+typedef struct {
+    int r, c;
+} Node;
+
+int main()
+{
+    int a[3][3] = {
+        {2, 1, 0},
+        {1, 1, 2},
+        {0, 1, 1}
+    };
+
+    Node q[MAX];
+    int front = 0, rear = 0;
+    int i, j, time = 0;
+    int dr[] = {-1, 1, 0, 0};
+    int dc[] = {0, 0, -1, 1};
+
+    for (i = 0; i < 3; i++)
+        for (j = 0; j < 3; j++)
+            if (a[i][j] == 2) {
+                q[rear].r = i;
+                q[rear].c = j;
+                rear++;
+            }
+
+    while (front < rear) {
+        int size = rear - front;
+        int changed = 0;
+
+        while (size--) {
+            Node cur = q[front++];
+
+            for (i = 0; i < 4; i++) {
+                int nr = cur.r + dr[i];
+                int nc = cur.c + dc[i];
+
+                if (nr >= 0 && nr < 3 &&
+                    nc >= 0 && nc < 3 &&
+                    a[nr][nc] == 1) {
+
+                    a[nr][nc] = 2;
+                    q[rear].r = nr;
+                    q[rear].c = nc;
+                    rear++;
+                    changed = 1;
+                }
+            }
+        }
+
+        if (changed)
+            time++;
+    }
+
+    for (i = 0; i < 3; i++)
+        for (j = 0; j < 3; j++)
+            if (a[i][j] == 1) {
+                printf("-1");
+                return 0;
+            }
+
+    printf("Minimum Time = %d", time);
+
+    return 0;
+}
+ Output:
+Minimum Time = 2
+  
