@@ -1,0 +1,569 @@
+Home Work-5
+
+1) Polynomial Addition Using Linked List: Use a linked list for polynomial representation and perform addition of two polynomials.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int coeff, pow;
+    struct Node *next;
+};
+
+struct Node* create(int c, int p) {
+    struct Node *n = malloc(sizeof(struct Node));
+    n->coeff = c;
+    n->pow = p;
+    n->next = NULL;
+    return n;
+}
+
+void display(struct Node *h) {
+    while (h) {
+        printf("%dx^%d", h->coeff, h->pow);
+        h = h->next;
+        if (h) printf(" + ");
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Node *p1 = create(3, 2);
+    p1->next = create(2, 1);
+    p1->next->next = create(1, 0);
+
+    struct Node *p2 = create(4, 2);
+    p2->next = create(5, 1);
+    p2->next->next = create(2, 0);
+
+    struct Node *a = p1, *b = p2, *sum = NULL, *tail = NULL;
+
+    while (a && b) {
+        int c, p;
+
+        if (a->pow == b->pow) {
+            c = a->coeff + b->coeff;
+            p = a->pow;
+            a = a->next;
+            b = b->next;
+        } else if (a->pow > b->pow) {
+            c = a->coeff;
+            p = a->pow;
+            a = a->next;
+        } else {
+            c = b->coeff;
+            p = b->pow;
+            b = b->next;
+        }
+
+        struct Node *n = create(c, p);
+        if (!sum) sum = tail = n;
+        else {
+            tail->next = n;
+            tail = n;
+        }
+    }
+
+    while (a) {
+        tail->next = create(a->coeff, a->pow);
+        tail = tail->next;
+        a = a->next;
+    }
+
+    while (b) {
+        tail->next = create(b->coeff, b->pow);
+        tail = tail->next;
+        b = b->next;
+    }
+
+    printf("Polynomial 1: ");
+    display(p1);
+    printf("Polynomial 2: ");
+    display(p2);
+    printf("Sum: ");
+    display(sum);
+
+    return 0;
+}
+
+Output:
+
+Polynomial 1: 3x^2 + 2x^1 + 1x^0
+Polynomial 2: 4x^2 + 5x^1 + 2x^0
+Sum: 7x^2 + 7x^1 + 3x^0
+
+2) Find the Previous Node in a Circular Linked List.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+int main() {
+    struct Node *a = malloc(sizeof(struct Node));
+    struct Node *b = malloc(sizeof(struct Node));
+    struct Node *c = malloc(sizeof(struct Node));
+
+    a->data = 10;
+    b->data = 20;
+    c->data = 30;
+
+    a->next = b;
+    b->next = c;
+    c->next = a;
+
+    int key = 10;
+    struct Node *p = a;
+
+    do {
+        if (p->next->data == key) {
+            printf("Previous node: %d\n", p->data);
+            return 0;
+        }
+        p = p->next;
+    } while (p != a);
+
+    printf("Node not found\n");
+    return 0;
+}
+
+Output:
+
+Previous node: 30
+
+3) Insert at a Given Position in a Circular Linked List.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+int main() {
+    struct Node *head = NULL, *tail = NULL, *n, *p;
+    int a[] = {10, 20, 30};
+    int i, pos = 2, value = 15;
+
+    for (i = 0; i < 3; i++) {
+        n = malloc(sizeof(struct Node));
+        n->data = a[i];
+
+        if (head == NULL)
+            head = tail = n;
+        else {
+            tail->next = n;
+            tail = n;
+        }
+    }
+
+    tail->next = head;
+
+    n = malloc(sizeof(struct Node));
+    n->data = value;
+
+    if (pos == 1) {
+        n->next = head;
+        tail->next = n;
+        head = n;
+    } else {
+        p = head;
+        for (i = 1; i < pos - 1; i++)
+            p = p->next;
+
+        n->next = p->next;
+        p->next = n;
+    }
+
+    p = head;
+    do {
+        printf("%d ", p->data);
+        p = p->next;
+    } while (p != head);
+
+    return 0;
+}
+
+Output:
+
+10 15 20 30 
+
+4) Find the Second Largest Element in a Queue.
+
+#include <stdio.h>
+
+int main() {
+    int q[] = {10, 50, 30, 40, 20};
+    int n = 5, largest = -1, second = -1;
+    int i;
+
+    for (i = 0; i < n; i++) {
+        if (q[i] > largest) {
+            second = largest;
+            largest = q[i];
+        } else if (q[i] > second && q[i] < largest) {
+            second = q[i];
+        }
+    }
+
+    printf("Second largest: %d", second);
+    return 0;
+}
+
+Output:
+
+Second largest: 40
+
+5) Insert the Third Element and Check Whether the First and Third Elements Are Equal.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+int main() {
+    int a[] = {10, 20, 10, 40};
+    struct Node *head = NULL, *tail = NULL, *n, *p;
+    int i, first, third;
+
+    for (i = 0; i < 4; i++) {
+        n = malloc(sizeof(struct Node));
+        n->data = a[i];
+        n->next = NULL;
+
+        if (!head)
+            head = tail = n;
+        else {
+            tail->next = n;
+            tail = n;
+        }
+    }
+
+    first = head->data;
+    p = head;
+
+    for (i = 1; i < 3; i++)
+        p = p->next;
+
+    third = p->data;
+
+    printf("First element: %d\n", first);
+    printf("Third element: %d\n", third);
+
+    if (first == third)
+        printf("Both elements are same");
+    else
+        printf("Both elements are different");
+
+    return 0;
+}
+
+Output:
+
+First element: 10
+Third element: 10
+Both elements are same
+
+6) Implement Two Stacks in a Single Array.
+
+#include <stdio.h>
+#define MAX 10
+
+int a[MAX];
+int top1 = -1, top2 = MAX;
+
+void push1(int x) {
+    if (top1 + 1 == top2)
+        printf("Stack Overflow\n");
+    else
+        a[++top1] = x;
+}
+
+void push2(int x) {
+    if (top1 + 1 == top2)
+        printf("Stack Overflow\n");
+    else
+        a[--top2] = x;
+}
+
+void display() {
+    int i;
+
+    printf("Stack 1: ");
+    for (i = top1; i >= 0; i--)
+        printf("%d ", a[i]);
+
+    printf("\nStack 2: ");
+    for (i = top2; i < MAX; i++)
+        printf("%d ", a[i]);
+
+    printf("\n");
+}
+
+int main() {
+    push1(10);
+    push1(20);
+    push2(30);
+    push2(40);
+
+    display();
+    return 0;
+}
+
+Output:
+
+Stack 1: 20 10 
+Stack 2: 40 30 
+
+7) Flatten a Multilevel Linked List in Sorted Order.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next, *bottom;
+};
+
+struct Node* create(int x) {
+    struct Node *n = malloc(sizeof(struct Node));
+    n->data = x;
+    n->next = n->bottom = NULL;
+    return n;
+}
+
+struct Node* merge(struct Node *a, struct Node *b) {
+    if (!a) return b;
+    if (!b) return a;
+
+    struct Node *result;
+
+    if (a->data <= b->data) {
+        result = a;
+        result->bottom = merge(a->bottom, b);
+    } else {
+        result = b;
+        result->bottom = merge(a, b->bottom);
+    }
+
+    result->next = NULL;
+    return result;
+}
+
+struct Node* flatten(struct Node *head) {
+    if (!head || !head->next)
+        return head;
+
+    head->next = flatten(head->next);
+    head = merge(head, head->next);
+
+    return head;
+}
+
+int main() {
+    struct Node *head = create(5);
+    head->bottom = create(7);
+    head->bottom->bottom = create(8);
+
+    head->next = create(10);
+    head->next->bottom = create(20);
+
+    head->next->next = create(19);
+    head->next->next->bottom = create(22);
+
+    head->next->next->next = create(28);
+    head->next->next->next->bottom = create(40);
+
+    head = flatten(head);
+
+    while (head) {
+        printf("%d ", head->data);
+        head = head->bottom;
+    }
+
+    return 0;
+}
+
+Output:
+
+5 7 8 10 19 20 22 28 40 
+
+8) Merge K Sorted Linked Lists.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node* create(int x) {
+    struct Node *n = malloc(sizeof(struct Node));
+    n->data = x;
+    n->next = NULL;
+    return n;
+}
+
+struct Node* merge(struct Node *a, struct Node *b) {
+    struct Node dummy;
+    struct Node *tail = &dummy;
+
+    dummy.next = NULL;
+
+    while (a && b) {
+        if (a->data <= b->data) {
+            tail->next = a;
+            a = a->next;
+        } else {
+            tail->next = b;
+            b = b->next;
+        }
+        tail = tail->next;
+    }
+
+    tail->next = a ? a : b;
+    return dummy.next;
+}
+
+int main() {
+    struct Node *a = create(1);
+    a->next = create(5);
+
+    struct Node *b = create(2);
+    b->next = create(6);
+
+    struct Node *c = create(3);
+    c->next = create(4);
+
+    struct Node *result = merge(merge(a, b), c);
+
+    while (result) {
+        printf("%d ", result->data);
+        result = result->next;
+    }
+
+    return 0;
+}
+
+Output:
+
+1 2 3 4 5 6 
+
+9) Swap the Kth Node from the Beginning with the Kth Node from the End.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+int main() {
+    int a[] = {1, 2, 3, 4, 5};
+    struct Node *head = NULL, *tail = NULL, *n, *p;
+    int i, k = 2, temp;
+
+    for (i = 0; i < 5; i++) {
+        n = malloc(sizeof(struct Node));
+        n->data = a[i];
+        n->next = NULL;
+
+        if (!head)
+            head = tail = n;
+        else {
+            tail->next = n;
+            tail = n;
+        }
+    }
+
+    struct Node *first = head;
+    struct Node *second = head;
+
+    for (i = 1; i < k; i++)
+        first = first->next;
+
+    p = head;
+    for (i = 1; i <= 5 - k; i++)
+        p = p->next;
+
+    second = p;
+
+    temp = first->data;
+    first->data = second->data;
+    second->data = temp;
+
+    printf("After swapping: ");
+    p = head;
+
+    while (p) {
+        printf("%d ", p->data);
+        p = p->next;
+    }
+
+    return 0;
+}
+
+Output:
+
+After swapping: 1 4 3 2 5 
+
+10) Multiply Two Numbers Represented by Linked Lists.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node* create(int x) {
+    struct Node *n = malloc(sizeof(struct Node));
+    n->data = x;
+    n->next = NULL;
+    return n;
+}
+
+long long convert(struct Node *head) {
+    long long num = 0;
+
+    while (head) {
+        num = num * 10 + head->data;
+        head = head->next;
+    }
+
+    return num;
+}
+
+int main() {
+    struct Node *a = create(1);
+    a->next = create(0);
+    a->next->next = create(0);
+
+    struct Node *b = create(1);
+    b->next = create(0);
+
+    long long n1 = convert(a);
+    long long n2 = convert(b);
+
+    printf("First number: %lld\n", n1);
+    printf("Second number: %lld\n", n2);
+    printf("Product: %lld\n", n1 * n2);
+
+    return 0;
+}
+
+Output:
+
+First number: 100
+Second number: 10
+Product: 1000
